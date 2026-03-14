@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0">Book {{ room.name }}</h4>
+            </div>
+            <div class="card-body">
+                <p class="lead text-muted">{{ room.type }} - ${{ room.price_per_night }} per night</p>
+                
+                <form action="{{ url_for('submit') }}" method="POST" id="bookingForm">
+                    <input type="hidden" name="room_id" value="{{ room.id }}">
+                    
+                    <div class="mb-3">
+                        <label for="guest_name" class="form-label">Full Name</label>
+                        <input type="text" class="form-control" id="guest_name" name="guest_name" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="guest_email" class="form-label">Email Address</label>
+                        <input type="email" class="form-control" id="guest_email" name="guest_email" required>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="check_in_date" class="form-label">Check-in Date</label>
+                            <input type="date" class="form-control" id="check_in_date" name="check_in_date" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="check_out_date" class="form-label">Check-out Date</label>
+                            <input type="date" class="form-control" id="check_out_date" name="check_out_date" required>
+                        </div>
+                    </div>
+                    
+                    <div class="d-grid gap-2 mt-4">
+                        <button type="submit" class="btn btn-success btn-lg" id="submitBtn">Confirm Booking</button>
+                        <a href="{{ url_for('index') }}" class="btn btn-outline-secondary">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
