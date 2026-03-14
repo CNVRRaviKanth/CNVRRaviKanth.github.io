@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<section class="text-center mb-5">
+    <h1 class="display-4 fw-bold">Welcome to Grand Hotel</h1>
+    <p class="lead text-muted">Experience luxury and comfort in the heart of the city.</p>
+</section>
+
+<section>
+    <h2 class="mb-4">Available Rooms</h2>
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+        {% for room in rooms %}
+        <div class="col">
+            <div class="card h-100 shadow-sm room-card">
+                <div class="card-body">
+                    <h5 class="card-title">{{ room.name }}</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">{{ room.type }}</h6>
+                    <p class="card-text">{{ room.description }}</p>
+                    <p class="card-text fw-bold text-success">${{ room.price_per_night }} / Night</p>
+                </div>
+                <div class="card-footer bg-transparent border-top-0">
+                    <a href="{{ url_for('book', room_id=room.id) }}" class="btn btn-primary w-100">Book Now</a>
+                </div>
+            </div>
+        </div>
+        {% else %}
+        <div class="col-12 text-center">
+            <p class="text-muted">No rooms available at the moment.</p>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}
