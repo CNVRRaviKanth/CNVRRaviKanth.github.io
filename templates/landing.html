@@ -1,16 +1,199 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="row align-items-center justify-content-center mt-5" style="min-height: 70vh;">
-    <div class="col-md-9 text-center p-5 glass-panel rounded-4">
-        <h1 class="display-3 fw-bold mb-4 font-playfair text-gold">Grand Hotel</h1>
-        <p class="lead mb-5 fs-4 text-light">Experience timeless luxury and unparalleled comfort.</p>
-        <div class="d-grid gap-3 d-sm-flex justify-content-sm-center">
-            <a href="{{ url_for('rooms') }}" class="btn btn-gold btn-lg px-5 py-3 rounded-pill fw-bold text-uppercase shadow-sm">Explore Rooms</a>
+<!-- Hero Section -->
+<section class="hero-section">
+    <div class="hero-bg"></div>
+    <div class="hero-overlay"></div>
+    <div class="container hero-content">
+        <h1 class="display-1 fw-bold mb-4 font-playfair text-gold reveal">Welcome to Grand Hotel</h1>
+        <p class="lead mb-5 fs-3 text-light reveal delay-1">Where Timeless Elegance Meets Modern Luxury</p>
+        <div class="d-grid gap-3 d-sm-flex justify-content-sm-center reveal delay-2">
+            <a href="{{ url_for('rooms') }}" class="btn btn-gold btn-lg px-5 py-3 rounded-pill fw-bold text-uppercase shadow-sm">Discover Our Suites</a>
             {% if not current_user.is_authenticated %}
-                <a href="{{ url_for('login') }}" class="btn btn-outline-light btn-lg px-5 py-3 rounded-pill fw-bold text-uppercase shadow-sm">Sign In</a>
+                <a href="{{ url_for('register') }}" class="btn btn-outline-light btn-lg px-5 py-3 rounded-pill fw-bold text-uppercase shadow-sm">Join the Elite</a>
             {% endif %}
         </div>
     </div>
-</div>
+</section>
+
+<!-- Stats/Intro Section -->
+<section class="container my-5 py-5 text-center reveal">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <h2 class="font-playfair text-gold mb-4 display-5">A Century of Hospitality</h2>
+            <p class="text-light opacity-75 fs-5 mb-5">Nestled in the heart of the city, Grand Hotel has been the preferred destination for royalty, celebrities, and discerning travelers since 1924. Our commitment to excellence is reflected in every detail, from the hand-carved marble in our lobby to the personalized service provided to every guest.</p>
+        </div>
+    </div>
+    <div class="row g-4 mt-4">
+        <div class="col-md-3">
+            <h3 class="text-gold h1 mb-1">150+</h3>
+            <p class="text-white-50">Luxury Rooms</p>
+        </div>
+        <div class="col-md-3">
+            <h3 class="text-gold h1 mb-1">24/7</h3>
+            <p class="text-white-50">Concierge Service</p>
+        </div>
+        <div class="col-md-3">
+            <h3 class="text-gold h1 mb-1">Michelin</h3>
+            <p class="text-white-50">Star Dining</p>
+        </div>
+        <div class="col-md-3">
+            <h3 class="text-gold h1 mb-1">Global</h3>
+            <p class="text-white-50">Excellence Awards</p>
+        </div>
+    </div>
+</section>
+
+<!-- Amenities Section -->
+<section class="container my-5 py-5 reveal">
+    <div class="text-center mb-5">
+        <h2 class="font-playfair text-gold display-5 section-title">Curated Experiences</h2>
+        <p class="text-white-50">Beyond a stay, we offer a journey through the senses.</p>
+    </div>
+    <div class="row g-4">
+        <div class="col-md-4">
+            <div class="amenity-card">
+                <img src="{{ url_for('static', filename='img/spa.png') }}" alt="Spa">
+                <div class="amenity-content">
+                    <h4 class="font-playfair">Celestial Spa</h4>
+                    <p class="small text-white-50 mb-0">Rejuvenate your soul with our signature therapy.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="amenity-card">
+                <img src="{{ url_for('static', filename='img/dining.png') }}" alt="Dining">
+                <div class="amenity-content">
+                    <h4 class="font-playfair">The Gilded Plate</h4>
+                    <p class="small text-white-50 mb-0">Experience culinary artistry by top chefs.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="amenity-card">
+                <img src="{{ url_for('static', filename='img/pool.png') }}" alt="Pool">
+                <div class="amenity-content">
+                    <h4 class="font-playfair">Infinity Serenity</h4>
+                    <p class="small text-white-50 mb-0">A panoramic escape above the city skyline.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Testimonials -->
+<section class="container my-5 py-5 reveal">
+    <div class="text-center mb-5">
+        <h2 class="font-playfair text-gold display-5">Voices of the Grand</h2>
+    </div>
+    <div class="row g-4">
+        <div class="col-md-4">
+            <div class="testimonial-item h-100">
+                <div class="quote-icon">“</div>
+                <p class="text-light fst-italic mb-4">"The attention to detail is simply unmatched. From the moment we arrived, we felt like royalty. The Deluxe Suite was a sanctuary of peace."</p>
+                <div class="d-flex align-items-center">
+                    <div class="ms-0">
+                        <h6 class="text-gold mb-0">Sir James Sterling</h6>
+                        <small class="text-white-50">Business Traveler</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="testimonial-item h-100">
+                <div class="quote-icon">“</div>
+                <p class="text-light fst-italic mb-4">"Hands down the best stay I've ever had. The Gilded Plate's tasting menu is a must-try for any food lover."</p>
+                <div class="d-flex align-items-center">
+                    <div class="ms-0">
+                        <h6 class="text-gold mb-0">Elena Rodriguez</h6>
+                        <small class="text-white-50">Food Critic</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="testimonial-item h-100">
+                <div class="quote-icon">“</div>
+                <p class="text-light fst-italic mb-4">"A perfect blend of historical charm and modern technology. The new rescheduling feature was a lifesaver for my trip!"</p>
+                <div class="d-flex align-items-center">
+                    <div class="ms-0">
+                        <h6 class="text-gold mb-0">David Chen</h6>
+                        <small class="text-white-50">Frequent Guest</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Newsletter CTA -->
+<section class="container my-5 py-5 reveal">
+    <div class="glass-panel p-5 rounded-4 text-center border-gold border-opacity-25">
+        <h2 class="font-playfair text-gold mb-3">Join the Grand Circle</h2>
+        <p class="text-white-50 mb-4">Subscribe to receive exclusive offers and updates on our upcoming events.</p>
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <form class="interaction-form d-flex gap-2">
+                    <input type="email" class="form-control bg-transparent text-light border-secondary rounded-pill px-4" placeholder="Your email address">
+                    <button type="button" class="btn btn-gold rounded-pill px-4">Subscribe</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+// Reveal Animation on Scroll
+function reveal() {
+    var reveals = document.querySelectorAll(".reveal");
+    for (var i = 0; i < reveals.length; i++) {
+        var windowHeight = window.innerHeight;
+        var elementTop = reveals[i].getBoundingClientRect().top;
+        var elementVisible = 150;
+        if (elementTop < windowHeight - elementVisible) {
+            reveals[i].classList.add("active");
+        }
+    }
+}
+
+window.addEventListener("scroll", reveal);
+
+// Initial call to reveal items on screen
+document.addEventListener("DOMContentLoaded", function() {
+    setTimeout(reveal, 100);
+});
+</script>
+
+<style>
+/* Additional Inline Layout Helpers */
+.delay-1 { transition-delay: 0.2s !important; }
+.delay-2 { transition-delay: 0.4s !important; }
+
+header {
+    background: transparent !important;
+    position: absolute;
+    width: 100%;
+    z-index: 1000;
+}
+
+.navbar {
+    transition: background 0.3s ease;
+}
+
+.scrolled .navbar {
+    background: rgba(18, 18, 18, 0.95) !important;
+    backdrop-filter: blur(10px);
+}
+</style>
+
+<script>
+window.onscroll = function() {
+    if (document.body.scrollTop > 50 || document.documentElement.scrollTop > 50) {
+        document.body.classList.add("scrolled");
+    } else {
+        document.body.classList.remove("scrolled");
+    }
+};
+</script>
 {% endblock %}
