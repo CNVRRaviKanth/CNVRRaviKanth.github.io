@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row justify-content-center mt-5">
+    <div class="col-md-8 col-lg-6">
+        <div class="glass-panel p-5 rounded-4 shadow-lg border-0 position-relative overflow-hidden">
+            <!-- Decorative circle -->
+            <div class="position-absolute top-0 end-0 translate-middle p-5 opacity-10">
+                <i class="bi bi-credit-card text-gold" style="font-size: 10rem;"></i>
+            </div>
+
+            <h2 class="font-playfair text-gold mb-2">Secure Top-up</h2>
+            <p class="text-white-50 mb-5">Add funds to your Grand Hotel wallet for seamless bookings.</p>
+            
+            <form method="POST" action="{{ url_for('topup') }}" id="payment-form">
+                <div class="row g-4">
+                    <div class="col-12">
+                        <label for="amount" class="form-label text-gold fw-bold small text-uppercase ls-1">Amount to Add ($)</label>
+                        <div class="input-group input-group-lg">
+                            <span class="input-group-text bg-transparent border-gold border-opacity-25 text-gold">$</span>
+                            <input type="number" step="0.01" class="form-control bg-transparent border-gold border-opacity-25 text-light" id="amount" name="amount" placeholder="0.00" required>
+                        </div>
+                    </div>
+
+                    <div class="col-12 mt-5">
+                        <label class="form-label text-gold fw-bold small text-uppercase ls-1">Card Details</label>
+                        <div class="mb-3">
+                            <input type="text" class="form-control bg-transparent border-gold border-opacity-25 text-light" placeholder="Card Number" pattern="\d{16}" title="16-digit card number" required>
+                        </div>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <input type="text" class="form-control bg-transparent border-gold border-opacity-25 text-light" placeholder="MM/YY" pattern="\d{2}/\d{2}" required>
+                            </div>
+                            <div class="col-md-6">
+                                <input type="text" class="form-control bg-transparent border-gold border-opacity-25 text-light" placeholder="CVV" pattern="\d{3}" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12 mt-5 d-grid">
+                        <button type="submit" class="btn btn-gold btn-lg rounded-pill fw-bold py-3 shadow-sm hover-lift">
+                            Proceed to Pay
+                        </button>
+                        <p class="text-center text-white-50 small mt-3">
+                            <i class="bi bi-shield-check text-gold"></i> Encrypted & Secure Payment
+                        </p>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<style>
+    .ls-1 { letter-spacing: 1px; }
+    .hover-lift:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.2) !important;
+    }
+    input::placeholder {
+        color: rgba(255,255,255,0.3) !important;
+    }
+</style>
+{% endblock %}

@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row justify-content-center mt-5">
+    <div class="col-lg-10">
+        <div class="glass-panel p-5 rounded-4 shadow-lg border-0">
+            <h2 class="font-playfair text-gold mb-5 text-center">My Bookings</h2>
+            
+            {% if bookings %}
+            <div class="table-responsive">
+                <table class="table table-borderless text-light align-middle">
+                    <thead>
+                        <tr class="border-bottom border-gold border-opacity-25">
+                            <th class="py-3">Room</th>
+                            <th class="py-3">Check-in</th>
+                            <th class="py-3">Check-out</th>
+                            <th class="py-3">Guest</th>
+                            <th class="py-3">Total Price</th>
+                            <th class="py-3 text-center">Status</th>
+                            <th class="py-3 text-end">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for booking in bookings %}
+                        <tr class="border-bottom border-gold border-opacity-10 hover-row">
+                            <td class="py-4">
+                                <span class="fw-bold text-gold">{{ booking.room.name }}</span><br>
+                                <small class="text-white-50">{{ booking.room.type }}</small>
+                            </td>
+                            <td class="py-4">{{ booking.check_in_date.strftime('%d %b %Y') }}</td>
+                            <td class="py-4">{{ booking.check_out_date.strftime('%d %b %Y') }}</td>
+                            <td class="py-4">
+                                {{ booking.guest_name }}<br>
+                                <small class="text-white-50">{{ booking.guest_email }}</small>
+                            </td>
+                            <td class="py-4 fw-bold text-gold">${{ "%.2f"|format(booking.total_price) }}</td>
+                            <td class="py-4 text-center">
+                                <span class="badge rounded-pill {% if booking.status == 'confirmed' %}bg-success{% elif booking.status == 'cancelled' %}bg-danger{% else %}bg-warning text-dark{% endif %} p-2 px-3">
+                                    {{ booking.status.capitalize() }}
+                                </span>
+                            </td>
+                            <td class="py-4 text-end">
+                                {% if booking.status != 'cancelled' %}
+                                <div class="d-flex justify-content-end gap-2">
+                                    <a href="{{ url_for('reschedule_booking', booking_id=booking.id) }}" class="btn btn-sm btn-outline-warning rounded-pill px-3">
+                                        <i class="bi bi-calendar-event me-1"></i> Reschedule
+                                    </a>
+                                    <a href="{{ url_for('cancel_booking', booking_id=booking.id) }}" 
+                                       class="btn btn-sm btn-outline-danger rounded-pill px-3"
+                                       onclick="return confirm('Are you sure you want to cancel this booking? A 10% penalty will apply.')">
+                                        <i class="bi bi-x-circle me-1"></i> Cancel
+                                    </a>
+                                </div>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="text-center py-5">
+                <i class="bi bi-calendar-x text-gold display-1 mb-4"></i>
+                <h4 class="text-white-50">You have no bookings yet.</h4>
+                <a href="{{ url_for('rooms') }}" class="btn btn-gold rounded-pill px-5 py-3 mt-4 fw-bold">Explore Our Rooms</a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<style>
+    .hover-row:hover {
+        background: rgba(212, 175, 55, 0.05);
+        transition: background 0.3s ease;
+    }
+    .table thead th {
+        font-family: 'Playfair Display', serif;
+        font-weight: 600;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        font-size: 0.85rem;
+    }
+</style>
+{% endblock %}

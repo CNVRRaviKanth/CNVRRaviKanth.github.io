@@ -1,33 +1,115 @@
-/* Custom Colors & Spacing Overrides */
+/* Dark Luxury Theme & Spacing Overrides */
 
-body {
-    background-color: #f8f9fa;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+:root {
+    --gold: #d4af37;
+    --gold-hover: #b5952f;
+    --dark-bg: #121212;
+    --dark-panel: rgba(30, 30, 30, 0.7);
 }
 
-/* Navbar */
-.navbar-brand {
-    font-weight: bold;
-    letter-spacing: 1px;
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--dark-bg);
+}
+
+.hotel-bg {
+    /* Subtle dark gradient background */
+    background: linear-gradient(135deg, #1f1f1f 0%, #0a0a0a 100%);
+    background-size: cover;
+    background-attachment: fixed;
+}
+
+.font-playfair {
+    font-family: 'Playfair Display', serif;
+}
+
+.text-gold {
+    color: var(--gold) !important;
+}
+
+/* Glassmorphism Panel */
+.glass-panel {
+    background: var(--dark-panel);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Buttons */
+.btn-gold {
+    background-color: var(--gold);
+    color: #111;
+    border-color: var(--gold);
+    transition: all 0.3s ease;
+}
+
+.btn-gold:hover {
+    background-color: var(--gold-hover);
+    color: #111;
+    border-color: var(--gold-hover);
+    transform: translateY(-2px);
+}
+
+.btn-outline-gold {
+    color: var(--gold);
+    border-color: var(--gold);
+    transition: all 0.3s ease;
+}
+
+.btn-outline-gold:hover {
+    background-color: var(--gold);
+    color: #111;
+}
+
+/* Navbar overrides */
+.navbar-dark .nav-link {
+    color: rgba(255, 255, 255, 0.8);
+    transition: color 0.3s ease;
+}
+
+.navbar-dark .nav-link:hover {
+    color: var(--gold);
 }
 
 /* Card Styling */
 .room-card {
+    background-color: var(--dark-panel);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #fff;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
+    backdrop-filter: blur(10px);
 }
 
 .room-card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 .5rem 1rem rgba(0,0,0,.15)!important;
+    box-shadow: 0 1rem 2rem rgba(0,0,0,0.5)!important;
+    border-color: var(--gold);
+}
+
+.room-card .text-muted {
+    color: #aaa !important;
 }
 
 /* Form Styling */
 .form-control:focus {
-    border-color: #198754;
-    box-shadow: 0 0 0 0.25rem rgba(25, 135, 84, 0.25);
+    border-color: var(--gold);
+    box-shadow: 0 0 0 0.25rem rgba(212, 175, 55, 0.25);
+}
+
+.form-floating > label {
+    color: #555;
 }
 
 /* Success Card */
 .success-card {
-    border-width: 2px;
+    background: rgba(25, 135, 84, 0.1);
+    backdrop-filter: blur(10px);
+    border: 2px solid #198754;
+}
+
+/* Alerts */
+.alert {
+    backdrop-filter: blur(10px);
+    background-color: rgba(33, 37, 41, 0.9); /* Dark background with opacity */
+    border: 1px solid rgba(255, 255, 255, 0.1);
 }

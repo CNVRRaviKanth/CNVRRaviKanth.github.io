@@ -1,42 +1,57 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="row justify-content-center">
+<div class="row justify-content-center mt-5">
     <div class="col-md-8">
-        <div class="card shadow">
-            <div class="card-header bg-primary text-white">
-                <h4 class="mb-0">Book {{ room.name }}</h4>
+        <div class="card glass-panel shadow-lg border-0 rounded-4">
+            <div class="card-header bg-transparent border-bottom border-secondary p-4">
+                <h4 class="mb-0 text-gold font-playfair">Book {{ room.name }}</h4>
             </div>
-            <div class="card-body">
-                <p class="lead text-muted">{{ room.type }} - ${{ room.price_per_night }} per night</p>
+            <div class="card-body p-5">
+                <p class="lead text-light opacity-75 mb-4">{{ room.type }} - <span class="text-gold fw-bold">${{ room.price_per_night }}</span> per night</p>
                 
                 <form action="{{ url_for('submit') }}" method="POST" id="bookingForm">
                     <input type="hidden" name="room_id" value="{{ room.id }}">
                     
-                    <div class="mb-3">
-                        <label for="guest_name" class="form-label">Full Name</label>
-                        <input type="text" class="form-control" id="guest_name" name="guest_name" required>
+                    <div class="mb-4 form-floating text-dark">
+                        <input type="text" class="form-control bg-light opacity-75 border-0 rounded-3" id="guest_name" name="guest_name" value="{{ current_user.username if current_user.is_authenticated else '' }}" required>
+                        <label for="guest_name">Full Name</label>
                     </div>
                     
-                    <div class="mb-3">
-                        <label for="guest_email" class="form-label">Email Address</label>
-                        <input type="email" class="form-control" id="guest_email" name="guest_email" required>
+                    <div class="mb-4 form-floating text-dark">
+                        <input type="email" class="form-control bg-light opacity-75 border-0 rounded-3" id="guest_email" name="guest_email" value="{{ current_user.email if current_user.is_authenticated else '' }}" required>
+                        <label for="guest_email">Email Address</label>
                     </div>
                     
                     <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label for="check_in_date" class="form-label">Check-in Date</label>
-                            <input type="date" class="form-control" id="check_in_date" name="check_in_date" required>
+                        <div class="col-md-6 mb-4 form-floating text-dark">
+                            <input type="date" class="form-control bg-light opacity-75 border-0 rounded-3" id="check_in_date" name="check_in_date" required>
+                            <label for="check_in_date" class="ms-2">Check-in Date</label>
                         </div>
-                        <div class="col-md-6 mb-3">
-                            <label for="check_out_date" class="form-label">Check-out Date</label>
-                            <input type="date" class="form-control" id="check_out_date" name="check_out_date" required>
+                        <div class="col-md-6 mb-4 form-floating text-dark">
+                            <input type="date" class="form-control bg-light opacity-75 border-0 rounded-3" id="check_out_date" name="check_out_date" required>
+                            <label for="check_out_date" class="ms-2">Check-out Date</label>
                         </div>
                     </div>
                     
-                    <div class="d-grid gap-2 mt-4">
-                        <button type="submit" class="btn btn-success btn-lg" id="submitBtn">Confirm Booking</button>
-                        <a href="{{ url_for('index') }}" class="btn btn-outline-secondary">Cancel</a>
+                    <div class="row pt-4 border-top border-gold border-opacity-10 mt-2">
+                        <div class="col-6">
+                            <p class="text-white-50 mb-0">Your Balance:</p>
+                            <h5 class="text-gold">${{ "%.2f"|format(current_user.wallet_balance) }}</h5>
+                        </div>
+                        <div class="col-6 text-end">
+                            {% if current_user.wallet_balance < room.price_per_night %}
+                                <div class="alert alert-danger py-2 px-3 small border-0 glass-panel">
+                                    <i class="bi bi-exclamation-triangle-fill"></i> Insufficient funds for even one night.
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="d-grid gap-3 d-sm-flex justify-content-sm-end mt-4">
+                        <a href="{{ url_for('rooms') }}" class="btn btn-outline-light rounded-pill px-5">Cancel</a>
+                        <a href="{{ url_for('topup') }}" class="btn btn-outline-gold rounded-pill px-4">Top-up Wallet</a>
+                        <button type="submit" class="btn btn-gold rounded-pill px-5 fw-bold" id="submitBtn">Confirm Booking</button>
                     </div>
                 </form>
             </div>

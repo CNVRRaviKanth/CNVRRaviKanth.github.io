@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row justify-content-center mt-5">
+    <div class="col-md-6 col-lg-5">
+        <div class="card glass-panel shadow-lg border-0 rounded-4">
+            <div class="card-body p-5">
+                <h3 class="text-center mb-4 font-playfair text-gold">Welcome Back</h3>
+                <form method="POST" action="{{ url_for('login') }}">
+                    <div class="mb-4 form-floating text-dark">
+                        <input type="email" class="form-control bg-light opacity-75 border-0 rounded-3" id="email" name="email" placeholder="Email Address" required>
+                        <label for="email">Email Address</label>
+                    </div>
+                    <div class="mb-5 form-floating text-dark">
+                        <input type="password" class="form-control bg-light opacity-75 border-0 rounded-3" id="password" name="password" placeholder="Password" required>
+                        <label for="password">Password</label>
+                    </div>
+                    <div class="d-grid mb-3">
+                        <button type="submit" class="btn btn-gold btn-lg rounded-pill fw-bold">Login</button>
+                    </div>
+                    <p class="text-center text-light mt-4 mb-0">Don't have an account? <a href="{{ url_for('register') }}" class="text-gold text-decoration-none fw-bold">Register here</a></p>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
