@@ -15,9 +15,15 @@
                         <input type="email" class="form-control bg-light opacity-75 border-0 rounded-3" id="email" name="email" placeholder="Email Address" required>
                         <label for="email">Email Address</label>
                     </div>
-                    <div class="mb-5 form-floating text-dark">
-                        <input type="password" class="form-control bg-light opacity-75 border-0 rounded-3" id="password" name="password" placeholder="Password" required>
+                    <div class="mb-4 form-floating text-dark">
+                        <input type="password" class="form-control bg-light opacity-75 border-0 rounded-3" id="password" name="password" 
+                               placeholder="Password" required
+                               pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$"
+                               title="Minimum 8 characters, at least one uppercase letter, one lowercase letter, one number and one special character">
                         <label for="password">Password</label>
+                        <div class="form-text text-white-50 x-small mt-1 px-2">
+                            Min 8 chars: 1 Upper, 1 Lower, 1 Number, 1 Special character (@$!%*?&)
+                        </div>
                     </div>
                     <div class="d-grid mb-3">
                         <button type="submit" class="btn btn-gold btn-lg rounded-pill fw-bold">Register</button>

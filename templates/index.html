@@ -6,20 +6,39 @@
     <p class="lead text-light text-opacity-75">Find your perfect sanctuary.</p>
 </section>
 
-<section>
-    <h2 class="mb-4">Available Rooms</h2>
-    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+<section class="mb-5">
+    <div class="d-flex flex-wrap justify-content-center gap-3 mb-5" id="categoryFilters">
+        <button class="btn btn-outline-gold rounded-pill active px-4" data-filter="all">All Rooms</button>
+        <button class="btn btn-outline-gold rounded-pill px-4" data-filter="Business">Business</button>
+        <button class="btn btn-outline-gold rounded-pill px-4" data-filter="Family">Family</button>
+        <button class="btn btn-outline-gold rounded-pill px-4" data-filter="Travel">Travel</button>
+        <button class="btn btn-outline-gold rounded-pill px-4" data-filter="Luxury">Luxury</button>
+    </div>
+
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4" id="roomGrid">
         {% for room in rooms %}
-        <div class="col">
+        <div class="col room-item" data-category="{{ room.category }}">
             <div class="card h-100 shadow-sm room-card rounded-4 border-0">
-                <div class="card-body p-4">
+                <div class="card-body p-4 text-start">
+                    <div class="d-flex justify-content-between align-items-start mb-2">
+                        <span class="badge bg-gold-20 text-gold rounded-pill px-3 py-2 small mb-2">{{ room.category }}</span>
+                        <span class="badge {% if room.available_rooms > 0 %}bg-success{% else %}bg-danger{% endif %} rounded-pill">
+                            {{ room.available_rooms }} Available
+                        </span>
+                    </div>
                     <h5 class="card-title font-playfair fs-4 text-gold">{{ room.name }}</h5>
-                    <h6 class="card-subtitle mb-3 text-light opacity-75">{{ room.type }}</h6>
-                    <p class="card-text text-light opacity-75">{{ room.description }}</p>
-                    <p class="card-text fw-bold fs-5 text-gold mt-3">${{ room.price_per_night }} <span class="fs-6 fw-normal opacity-50">/ Night</span></p>
+                    <div class="mb-3">
+                        <h6 class="card-subtitle text-light opacity-75 mb-0 small">{{ room.type }} <span class="ms-1 text-gold-50">({{ room.capacity }})</span></h6>
+                    </div>
+                    <p class="card-text text-light opacity-75 small">{{ room.description }}</p>
+                    <p class="card-text fw-bold fs-5 text-gold mt-3">₹{{ room.price_per_night }} <span class="fs-6 fw-normal opacity-50">/ Night</span></p>
                 </div>
-                <div class="card-footer bg-transparent border-top-0 p-4 pt-0">
+                <div class="card-footer bg-transparent border-top-0 p-4 pt-0 text-start">
+                    {% if not current_user.is_admin %}
                     <a href="{{ url_for('book', room_id=room.id) }}" class="btn btn-outline-gold w-100 rounded-pill fw-bold">Book Now</a>
+                    {% else %}
+                    <a href="{{ url_for('edit_room', room_id=room.id) }}" class="btn btn-outline-light w-100 rounded-pill fw-bold">Manage Inventory</a>
+                    {% endif %}
                 </div>
             </div>
         </div>
@@ -30,4 +49,45 @@
         {% endfor %}
     </div>
 </section>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const filterButtons = document.querySelectorAll('#categoryFilters button');
+        const roomItems = document.querySelectorAll('.room-item');
+
+        filterButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const filter = this.getAttribute('data-filter');
+                
+                // Update active button
+                filterButtons.forEach(btn => btn.classList.remove('active'));
+                this.classList.add('active');
+
+                // Filter rooms
+                roomItems.forEach(item => {
+                    if (filter === 'all' || item.getAttribute('data-category') === filter) {
+                        item.style.display = 'block';
+                    } else {
+                        item.style.display = 'none';
+                    }
+                });
+            });
+        });
+    });
+</script>
+
+<style>
+    .bg-gold-20 {
+        background: rgba(197, 160, 89, 0.2);
+    }
+    .btn-outline-gold {
+        border-color: #C5A059;
+        color: #C5A059;
+        transition: all 0.3s ease;
+    }
+    .btn-outline-gold:hover, .btn-outline-gold.active {
+        background: #C5A059;
+        color: white;
+    }
+</style>
 {% endblock %}

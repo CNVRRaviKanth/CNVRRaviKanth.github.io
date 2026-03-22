@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<section class="text-center mb-5 mt-4">
+    <h1 class="display-4 fw-bold font-playfair text-gold">Indian Mini Food Section</h1>
+    <p class="lead text-light text-opacity-75">Delicious Indian tiffins and refreshing drinks delivered to your room.</p>
+</section>
+
+<div class="container pb-5">
+    <!-- Tiffins Section -->
+    <h2 class="font-playfair text-gold border-bottom border-gold border-opacity-25 pb-3 mb-4">Indian Tiffins</h2>
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4 mb-5">
+        {% for item in tiffins %}
+        <div class="col">
+            <div class="card h-100 shadow-sm food-card glass-panel rounded-4 border-0">
+                <div class="card-body p-4 text-center">
+                    <div class="category-badge mb-3">
+                        <span class="badge bg-gold text-dark rounded-pill">{{ item.category }}</span>
+                    </div>
+                    <h5 class="card-title font-playfair fs-4 text-gold mb-2">{{ item.name }}</h5>
+                    <p class="card-text text-light opacity-75 small mb-3">{{ item.description }}</p>
+                    <p class="card-text fw-bold fs-5 text-gold mt-auto">₹{{ "%.2f"|format(item.price) }}</p>
+                </div>
+                <div class="card-footer bg-transparent border-top-0 p-4 pt-0">
+                    <a href="{{ url_for('order_food', food_id=item.id) }}" class="btn btn-outline-gold w-100 rounded-pill fw-bold">Order Now</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Drinks Section -->
+    <h2 class="font-playfair text-gold border-bottom border-gold border-opacity-25 pb-3 mb-4">Indian Drinks</h2>
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4">
+        {% for item in drinks %}
+        <div class="col">
+            <div class="card h-100 shadow-sm food-card glass-panel rounded-4 border-0">
+                <div class="card-body p-4 text-center">
+                    <div class="category-badge mb-3">
+                        <span class="badge bg-info text-dark rounded-pill">{{ item.category }}</span>
+                    </div>
+                    <h5 class="card-title font-playfair fs-4 text-gold mb-2">{{ item.name }}</h5>
+                    <p class="card-text text-light opacity-75 small mb-3">{{ item.description }}</p>
+                    <p class="card-text fw-bold fs-5 text-gold mt-auto">₹{{ "%.2f"|format(item.price) }}</p>
+                </div>
+                <div class="card-footer bg-transparent border-top-0 p-4 pt-0">
+                    <a href="{{ url_for('order_food', food_id=item.id) }}" class="btn btn-outline-gold w-100 rounded-pill fw-bold">Order Now</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<style>
+.food-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.food-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 10px 30px rgba(212, 175, 55, 0.2) !important;
+}
+</style>
+{% endblock %}

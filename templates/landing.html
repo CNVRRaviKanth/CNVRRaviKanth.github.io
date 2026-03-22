@@ -9,41 +9,18 @@
         <h1 class="display-1 fw-bold mb-4 font-playfair text-gold reveal">Welcome to Grand Hotel</h1>
         <p class="lead mb-5 fs-3 text-light reveal delay-1">Where Timeless Elegance Meets Modern Luxury</p>
         <div class="d-grid gap-3 d-sm-flex justify-content-sm-center reveal delay-2">
-            <a href="{{ url_for('rooms') }}" class="btn btn-gold btn-lg px-5 py-3 rounded-pill fw-bold text-uppercase shadow-sm">Discover Our Suites</a>
-            {% if not current_user.is_authenticated %}
-                <a href="{{ url_for('register') }}" class="btn btn-outline-light btn-lg px-5 py-3 rounded-pill fw-bold text-uppercase shadow-sm">Join the Elite</a>
+            {% if current_user.is_authenticated and current_user.is_admin %}
+                <a href="{{ url_for('admin_dashboard') }}" class="btn btn-gold btn-lg px-5 py-3 rounded-pill fw-bold text-uppercase shadow-sm">Go to Dashboard</a>
+            {% else %}
+                <a href="{{ url_for('rooms') }}" class="btn btn-gold btn-lg px-5 py-3 rounded-pill fw-bold text-uppercase shadow-sm">Discover Our Suites</a>
+                {% if not current_user.is_authenticated %}
+                    <a href="{{ url_for('register') }}" class="btn btn-outline-light btn-lg px-5 py-3 rounded-pill fw-bold text-uppercase shadow-sm">Join the Elite</a>
+                {% endif %}
             {% endif %}
         </div>
     </div>
 </section>
 
-<!-- Stats/Intro Section -->
-<section class="container my-5 py-5 text-center reveal">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <h2 class="font-playfair text-gold mb-4 display-5">A Century of Hospitality</h2>
-            <p class="text-light opacity-75 fs-5 mb-5">Nestled in the heart of the city, Grand Hotel has been the preferred destination for royalty, celebrities, and discerning travelers since 1924. Our commitment to excellence is reflected in every detail, from the hand-carved marble in our lobby to the personalized service provided to every guest.</p>
-        </div>
-    </div>
-    <div class="row g-4 mt-4">
-        <div class="col-md-3">
-            <h3 class="text-gold h1 mb-1">150+</h3>
-            <p class="text-white-50">Luxury Rooms</p>
-        </div>
-        <div class="col-md-3">
-            <h3 class="text-gold h1 mb-1">24/7</h3>
-            <p class="text-white-50">Concierge Service</p>
-        </div>
-        <div class="col-md-3">
-            <h3 class="text-gold h1 mb-1">Michelin</h3>
-            <p class="text-white-50">Star Dining</p>
-        </div>
-        <div class="col-md-3">
-            <h3 class="text-gold h1 mb-1">Global</h3>
-            <p class="text-white-50">Excellence Awards</p>
-        </div>
-    </div>
-</section>
 
 <!-- Amenities Section -->
 <section class="container my-5 py-5 reveal">
@@ -122,22 +99,6 @@
                         <small class="text-white-50">Frequent Guest</small>
                     </div>
                 </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- Newsletter CTA -->
-<section class="container my-5 py-5 reveal">
-    <div class="glass-panel p-5 rounded-4 text-center border-gold border-opacity-25">
-        <h2 class="font-playfair text-gold mb-3">Join the Grand Circle</h2>
-        <p class="text-white-50 mb-4">Subscribe to receive exclusive offers and updates on our upcoming events.</p>
-        <div class="row justify-content-center">
-            <div class="col-md-6">
-                <form class="interaction-form d-flex gap-2">
-                    <input type="email" class="form-control bg-transparent text-light border-secondary rounded-pill px-4" placeholder="Your email address">
-                    <button type="button" class="btn btn-gold rounded-pill px-4">Subscribe</button>
-                </form>
             </div>
         </div>
     </div>

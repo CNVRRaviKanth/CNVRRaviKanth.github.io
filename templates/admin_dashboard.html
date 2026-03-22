@@ -1,0 +1,171 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Dashboard{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="glass-header mb-5 p-4 rounded-4 text-center">
+        <h1 class="display-4 fw-bold text-white mb-0">Admin Dashboard</h1>
+        <p class="text-white-50">Manage your luxury estate and guest experiences</p>
+    </div>
+
+    <!-- Quick Stats -->
+    <div class="row g-4 mb-5">
+        <div class="col-md-4">
+            <div class="glass-card p-4 text-center h-100">
+                <i class="fas fa-bed fa-2x mb-3 text-accent"></i>
+                <h3 class="h1 fw-bold text-white mb-1">{{ rooms|length }}</h3>
+                <p class="text-white-50 mb-0">Total Room Types</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="glass-card p-4 text-center h-100">
+                <i class="fas fa-calendar-check fa-2x mb-3 text-accent"></i>
+                <h3 class="h1 fw-bold text-white mb-1">{{ bookings|length }}</h3>
+                <p class="text-white-50 mb-0">All Time Bookings</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="glass-card p-4 text-center h-100">
+                <i class="fas fa-concierge-bell fa-2x mb-3 text-accent"></i>
+                <h3 class="h1 fw-bold text-white mb-1">{{ services|length }}</h3>
+                <p class="text-white-50 mb-0">Live Services</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Room Management -->
+    <div class="glass-card p-4 mb-5">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 class="h3 fw-bold text-white mb-0">Room Inventory</h2>
+            <a href="{{ url_for('add_room') }}" class="btn btn-accent px-4 py-2 rounded-pill">
+                <i class="fas fa-plus me-2"></i>Add New Room
+            </a>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-hover table-dark-custom">
+                <thead>
+                    <tr>
+                        <th>Room Name</th>
+                        <th>Type</th>
+                        <th>Capacity</th>
+                        <th>Price/Night</th>
+                        <th>Availability</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for room in rooms %}
+                    <tr>
+                        <td>{{ room.name }}</td>
+                        <td><span class="badge bg-secondary">{{ room.type }}</span></td>
+                        <td>{{ room.capacity }}</td>
+                        <td>₹{{ "%.2f"|format(room.price_per_night) }}</td>
+                        <td>
+                            <div class="progress" style="height: 10px; background: rgba(255,255,255,0.1);">
+                                {% set availability_pct = (room.available_rooms / room.total_rooms * 100)|int %}
+                                <div class="progress-bar bg-accent" role="progressbar" style="width: {{ availability_pct }}%"></div>
+                            </div>
+                            <small class="text-white-50">{{ room.available_rooms }} / {{ room.total_rooms }} Available</small>
+                        </td>
+                        <td>
+                            <a href="{{ url_for('edit_room', room_id=room.id) }}" class="btn btn-sm btn-outline-light rounded-pill px-3">
+                                <i class="fas fa-edit me-1"></i> Edit
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Recent Bookings -->
+    <div class="glass-card p-4">
+        <h2 class="h3 fw-bold text-white mb-4">Recent Guest Bookings</h2>
+        <div class="table-responsive">
+            <table class="table table-hover table-dark-custom">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Guest</th>
+                        <th>Room</th>
+                        <th>Dates</th>
+                        <th>Total Cost</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for booking in bookings[:10] %}
+                    <tr>
+                        <td>#{{ booking.id }}</td>
+                        <td>
+                            <div class="fw-bold">{{ booking.guest_name }}</div>
+                            <small class="text-white-50">{{ booking.guest_email }}</small>
+                        </td>
+                        <td>{{ booking.room.name }}</td>
+                        <td>
+                            <small class="d-block">{{ booking.check_in_date.strftime('%b %d') }} - {{ booking.check_out_date.strftime('%b %d, %Y') }}</small>
+                        </td>
+                        <td>₹{{ "%.2f"|format(booking.total_price) }}</td>
+                        <td>
+                            {% if booking.status == 'confirmed' %}
+                            <span class="badge bg-success">Confirmed</span>
+                            {% elif booking.status == 'cancelled' %}
+                            <span class="badge bg-danger">Cancelled</span>
+                            {% else %}
+                            <span class="badge bg-warning text-dark">{{ booking.status|capitalize }}</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<style>
+    .glass-header {
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .glass-card {
+        background: rgba(255, 255, 255, 0.03);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 20px;
+    }
+    .table-dark-custom {
+        color: white;
+        background: transparent;
+    }
+    .table-dark-custom thead th {
+        border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+        color: rgba(255, 255, 255, 0.6);
+        font-weight: 600;
+        text-transform: uppercase;
+        font-size: 0.8rem;
+    }
+    .table-dark-custom td {
+        vertical-align: middle;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        padding: 1.25rem 0.75rem;
+    }
+    .btn-accent {
+        background: #C5A059;
+        color: white;
+        border: none;
+        transition: all 0.3s ease;
+    }
+    .btn-accent:hover {
+        background: #b08e4d;
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(197, 160, 89, 0.3);
+    }
+    .text-accent {
+        color: #C5A059;
+    }
+</style>
+{% endblock %}

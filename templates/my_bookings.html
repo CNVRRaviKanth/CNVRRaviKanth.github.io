@@ -21,50 +21,168 @@
                         </tr>
                     </thead>
                     <tbody>
-                        {% for booking in bookings %}
-                        <tr class="border-bottom border-gold border-opacity-10 hover-row">
-                            <td class="py-4">
-                                <span class="fw-bold text-gold">{{ booking.room.name }}</span><br>
-                                <small class="text-white-50">{{ booking.room.type }}</small>
-                            </td>
-                            <td class="py-4">{{ booking.check_in_date.strftime('%d %b %Y') }}</td>
-                            <td class="py-4">{{ booking.check_out_date.strftime('%d %b %Y') }}</td>
-                            <td class="py-4">
-                                {{ booking.guest_name }}<br>
-                                <small class="text-white-50">{{ booking.guest_email }}</small>
-                            </td>
-                            <td class="py-4 fw-bold text-gold">${{ "%.2f"|format(booking.total_price) }}</td>
-                            <td class="py-4 text-center">
-                                <span class="badge rounded-pill {% if booking.status == 'confirmed' %}bg-success{% elif booking.status == 'cancelled' %}bg-danger{% else %}bg-warning text-dark{% endif %} p-2 px-3">
-                                    {{ booking.status.capitalize() }}
-                                </span>
-                            </td>
-                            <td class="py-4 text-end">
-                                {% if booking.status != 'cancelled' %}
-                                <div class="d-flex justify-content-end gap-2">
-                                    <a href="{{ url_for('reschedule_booking', booking_id=booking.id) }}" class="btn btn-sm btn-outline-warning rounded-pill px-3">
-                                        <i class="bi bi-calendar-event me-1"></i> Reschedule
-                                    </a>
-                                    <a href="{{ url_for('cancel_booking', booking_id=booking.id) }}" 
-                                       class="btn btn-sm btn-outline-danger rounded-pill px-3"
-                                       onclick="return confirm('Are you sure you want to cancel this booking? A 10% penalty will apply.')">
-                                        <i class="bi bi-x-circle me-1"></i> Cancel
-                                    </a>
-                                </div>
-                                {% endif %}
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
+                            {% for booking in bookings %}
+                            <tr class="border-bottom border-gold border-opacity-10 hover-row">
+                                <td class="py-4">
+                                    <span class="fw-bold text-gold">{{ booking.room.name }}</span><br>
+                                    <small class="text-white-50">{{ booking.room.type }} (Capacity: {{ booking.room.max_capacity }})</small>
+                                </td>
+                                <td class="py-4">{{ booking.check_in_date.strftime('%d %b %Y') }}</td>
+                                <td class="py-4">{{ booking.check_out_date.strftime('%d %b %Y') }}</td>
+                                <td class="py-4">
+                                    <div class="guest-list-trigger" style="cursor: pointer;" onclick="toggleGuests('guests-{{ booking.id }}')">
+                                        <span class="text-gold fw-bold">{{ booking.guests|length }} Guest(s)</span>
+                                        <i class="bi bi-chevron-down small ms-1 text-white-50"></i>
+                                    </div>
+                                    <div id="guests-{{ booking.id }}" class="guest-details mt-2" style="display: none;">
+                                        {% for guest in booking.guests %}
+                                        <div class="mb-2 p-2 rounded bg-white bg-opacity-5 border border-white border-opacity-10">
+                                            <p class="mb-0 small fw-bold text-gold">{{ guest.name }}</p>
+                                            <p class="mb-0 x-small text-white-50">{{ guest.email }}</p>
+                                            <p class="mb-0 x-small text-white-50">Aadhar: <span class="text-light">{{ guest.aadhar_number }}</span></p>
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                </td>
+                                <td class="py-4 fw-bold text-gold">₹{{ "%.2f"|format(booking.total_price) }}</td>
+                                <td class="py-4 text-center">
+                                    <span class="badge rounded-pill {% if booking.status == 'confirmed' %}bg-success{% elif booking.status == 'cancelled' %}bg-danger{% else %}bg-warning text-dark{% endif %} p-2 px-3">
+                                        {{ booking.status.capitalize() }}
+                                    </span>
+                                </td>
+                                <td class="py-4 text-end">
+                                    {% if booking.status != 'cancelled' %}
+                                    <div class="d-flex justify-content-end gap-2">
+                                        <a href="{{ url_for('reschedule_booking', booking_id=booking.id) }}" class="btn btn-sm btn-outline-warning rounded-pill px-3">
+                                            <i class="bi bi-calendar-event me-1"></i> Reschedule
+                                        </a>
+                                        <a href="{{ url_for('cancel_booking', booking_id=booking.id) }}" 
+                                           class="btn btn-sm btn-outline-danger rounded-pill px-3"
+                                           onclick="return confirm('Are you sure you want to cancel this booking? A 10% penalty will apply.')">
+                                            <i class="bi bi-x-circle me-1"></i> Cancel
+                                        </a>
+                                    </div>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="text-center py-5">
+                    <i class="bi bi-calendar-x text-gold display-1 mb-4"></i>
+                    <h4 class="text-white-50">You have no room bookings yet.</h4>
+                    <a href="{{ url_for('rooms') }}" class="btn btn-gold rounded-pill px-5 py-3 mt-4 fw-bold">Explore Our Rooms</a>
+                </div>
+                {% endif %}
+
+                <div class="mt-5 pt-5 border-top border-gold border-opacity-25">
+                    <h2 class="font-playfair text-gold mb-5 text-center">My Food Orders</h2>
+                    
+                    {% if food_orders %}
+                    <div class="table-responsive">
+                        <table class="table table-borderless text-light align-middle">
+                            <thead>
+                                <tr class="border-bottom border-gold border-opacity-25">
+                                    <th class="py-3">Food Item</th>
+                                    <th class="py-3">Category</th>
+                                    <th class="py-3">Order Date</th>
+                                    <th class="py-3 text-end">Price</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for order in food_orders %}
+                                <tr class="border-bottom border-gold border-opacity-10 hover-row">
+                                    <td class="py-4">
+                                        <span class="fw-bold text-gold">{{ order.food.name }}</span>
+                                    </td>
+                                    <td class="py-4 text-white-50">{{ order.food.category }}</td>
+                                    <td class="py-4 small text-white-50">
+                                        {{ order.order_date.strftime('%d %b %Y, %H:%M') }}
+                                    </td>
+                                    <td class="py-4 text-end fw-bold text-gold">₹{{ "%.2f"|format(order.price) }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <div class="text-center py-5">
+                        <i class="bi bi-cup-hot text-gold display-1 mb-4"></i>
+                        <h4 class="text-white-50">No food orders yet.</h4>
+                        <a href="{{ url_for('food_menu') }}" class="btn btn-outline-gold rounded-pill px-5 py-3 mt-4 fw-bold">Order Delicious Food</a>
+                    </div>
+                    {% endif %}
+                </div>
+
+                <div class="mt-5 pt-5 border-top border-gold border-opacity-25">
+                    <script>
+                        function toggleGuests(id) {
+                            const el = document.getElementById(id);
+                            el.style.display = el.style.display === 'none' ? 'block' : 'none';
+                        }
+                    </script>
+                    <h2 class="font-playfair text-gold mb-5 text-center">My Tourism Plans</h2>
+                
+                {% if tourism_bookings %}
+                <div class="table-responsive">
+                    <table class="table table-borderless text-light align-middle">
+                        <thead>
+                            <tr class="border-bottom border-gold border-opacity-25">
+                                <th class="py-3">Package</th>
+                                <th class="py-3">Duration</th>
+                                <th class="py-3">Description</th>
+                                <th class="py-3">Booking Date</th>
+                                <th class="py-3 text-center">Status</th>
+                                <th class="py-3 text-end">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for tb in tourism_bookings %}
+                            <tr class="border-bottom border-gold border-opacity-10 hover-row">
+                                <td class="py-4">
+                                    <span class="fw-bold text-gold">{{ tb.package.name }}</span>
+                                </td>
+                                <td class="py-4 text-white-50">{{ tb.package.duration }}</td>
+                                <td class="py-4" style="max-width: 300px;">
+                                    <small class="text-light text-opacity-75">{{ tb.package.description }}</small>
+                                </td>
+                                <td class="py-4 small text-white-50">
+                                    {{ tb.booking_date.strftime('%d %b %Y, %H:%M') }}
+                                </td>
+                                <td class="py-4 text-center">
+                                    <span class="badge rounded-pill {% if tb.status == 'confirmed' %}bg-success{% else %}bg-danger{% endif %} p-2 px-3">
+                                        {{ tb.status.capitalize() }}
+                                    </span>
+                                </td>
+                                <td class="py-4 text-end">
+                                    {% if tb.status != 'cancelled' %}
+                                    <div class="d-flex justify-content-end gap-2">
+                                        <a href="{{ url_for('reschedule_tourism_booking', booking_id=tb.id) }}" class="btn btn-sm btn-outline-warning rounded-pill px-3">
+                                            <i class="bi bi-calendar-event me-1"></i> Reschedule
+                                        </a>
+                                        <a href="{{ url_for('cancel_tourism_booking', booking_id=tb.id) }}" 
+                                           class="btn btn-sm btn-outline-danger rounded-pill px-3"
+                                           onclick="return confirm('Are you sure you want to cancel this tourism booking? A 10% penalty will apply.')">
+                                            <i class="bi bi-x-circle me-1"></i> Cancel
+                                        </a>
+                                    </div>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="text-center py-5">
+                    <i class="bi bi-geo-alt text-gold display-1 mb-4"></i>
+                    <h4 class="text-white-50">No tourism packages booked yet.</h4>
+                    <a href="{{ url_for('tourism') }}" class="btn btn-outline-gold rounded-pill px-5 py-3 mt-4 fw-bold">View Packages</a>
+                </div>
+                {% endif %}
             </div>
-            {% else %}
-            <div class="text-center py-5">
-                <i class="bi bi-calendar-x text-gold display-1 mb-4"></i>
-                <h4 class="text-white-50">You have no bookings yet.</h4>
-                <a href="{{ url_for('rooms') }}" class="btn btn-gold rounded-pill px-5 py-3 mt-4 fw-bold">Explore Our Rooms</a>
-            </div>
-            {% endif %}
         </div>
     </div>
 </div>

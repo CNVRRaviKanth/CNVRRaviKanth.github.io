@@ -1,10 +1,11 @@
 /* Dark Luxury Theme & Spacing Overrides */
 
 :root {
-    --gold: #d4af37;
-    --gold-hover: #b5952f;
-    --dark-bg: #121212;
-    --dark-panel: rgba(30, 30, 30, 0.7);
+    --gold: #e5e4e2; /* Platinum */
+    --gold-hover: #cccccc; 
+    --dark-bg: #050a18; /* Royal Navy */
+    --dark-panel: rgba(10, 17, 40, 0.7);
+    --navy-accent: #0f1e40;
 }
 
 body {
@@ -13,8 +14,8 @@ body {
 }
 
 .hotel-bg {
-    /* Subtle dark gradient background */
-    background: linear-gradient(135deg, #1f1f1f 0%, #0a0a0a 100%);
+    /* Deep Navy Gradient */
+    background: linear-gradient(135deg, #0a1128 0%, #050a18 100%);
     background-size: cover;
     background-attachment: fixed;
 }
@@ -97,7 +98,7 @@ body {
 }
 
 .form-floating > label {
-    color: #555;
+    color: rgba(255, 255, 255, 0.6);
 }
 
 /* Success Card */
@@ -109,9 +110,20 @@ body {
 
 /* Alerts */
 .alert {
-    backdrop-filter: blur(10px);
-    background-color: rgba(33, 37, 41, 0.9); /* Dark background with opacity */
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(15px);
+    background-color: rgba(10, 17, 40, 0.9); /* Navy tinted alerts */
+    border: 1px solid var(--gold);
+    color: var(--gold);
+}
+
+.alert-success {
+    border-color: #28a745;
+    color: #d4edda;
+}
+
+.alert-danger {
+    border-color: #dc3545;
+    color: #f8d7da;
 }
 
 /* Landing Page Enhancements */

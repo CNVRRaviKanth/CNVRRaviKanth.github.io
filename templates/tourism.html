@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<section class="text-center mb-5 mt-4">
+    <h1 class="display-4 fw-bold font-playfair text-gold">Explore Local Attractions</h1>
+    <p class="lead text-light text-opacity-75">Curated tourism packages for a memorable stay.</p>
+</section>
+
+<div class="container pb-5">
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-2 g-4">
+        {% for package in packages %}
+        <div class="col">
+            <div class="card h-100 shadow-sm tourism-card glass-panel rounded-4 border-0 overflow-hidden">
+                <div class="row g-0 h-100">
+                    <div class="col-md-4 bg-gold-opacity-10 d-flex align-items-center justify-content-center p-4">
+                        <div class="text-center">
+                            <i class="bi bi-geo-alt-fill text-gold display-4"></i>
+                            <div class="mt-2 fw-bold text-gold text-uppercase small">{{ package.duration }}</div>
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card-body p-4 d-flex flex-column h-100">
+                            <h4 class="card-title font-playfair text-gold mb-3">{{ package.name }}</h4>
+                            <p class="card-text text-light opacity-75 small mb-4">{{ package.description }}</p>
+                            <div class="mt-auto d-flex justify-content-between align-items-center">
+                                <span class="fw-bold fs-4 text-gold">₹{{ "%.2f"|format(package.price) }}</span>
+                                <a href="{{ url_for('buy_package', package_id=package.id) }}" class="btn btn-gold rounded-pill px-4 fw-bold shadow-sm">Book Tour</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<style>
+.bg-gold-opacity-10 {
+    background: rgba(212, 175, 55, 0.1);
+}
+.tourism-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.tourism-card:hover {
+    transform: scale(1.02);
+    box-shadow: 0 15px 35px rgba(212, 175, 55, 0.15) !important;
+}
+</style>
+{% endblock %}

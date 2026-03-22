@@ -8,20 +8,37 @@
                 <h4 class="mb-0 text-gold font-playfair">Book {{ room.name }}</h4>
             </div>
             <div class="card-body p-5">
-                <p class="lead text-light opacity-75 mb-4">{{ room.type }} - <span class="text-gold fw-bold">${{ room.price_per_night }}</span> per night</p>
-                
+                <p class="lead text-light opacity-75 mb-2">{{ room.type }} - <span class="text-gold fw-bold">₹{{ room.price_per_night }}</span> per night</p>
+                <p class="small text-white-50 mb-4 fw-light"><i class="bi bi-people-fill me-1"></i> Arrangement: {{ room.capacity }}</p>
+
                 <form action="{{ url_for('submit') }}" method="POST" id="bookingForm">
                     <input type="hidden" name="room_id" value="{{ room.id }}">
                     
-                    <div class="mb-4 form-floating text-dark">
-                        <input type="text" class="form-control bg-light opacity-75 border-0 rounded-3" id="guest_name" name="guest_name" value="{{ current_user.username if current_user.is_authenticated else '' }}" required>
-                        <label for="guest_name">Full Name</label>
+                    <div class="row">
+                        <div class="col-md-6 mb-4 form-floating text-dark">
+                            <input type="text" class="form-control bg-light opacity-75 border-0 rounded-3" id="guest_name" name="guest_name" value="{{ current_user.username if current_user.is_authenticated else '' }}" required>
+                            <label for="guest_name">Primary Guest Name</label>
+                        </div>
+                        <div class="col-md-6 mb-4 form-floating text-dark">
+                            <input type="text" class="form-control bg-light opacity-75 border-0 rounded-3" id="guest_aadhar" name="guest_aadhar" placeholder="12 Digit Aadhar" pattern="\d{12}" title="Aadhar number must be exactly 12 digits" required>
+                            <label for="guest_aadhar">Primary Guest Aadhar (12 digits)</label>
+                        </div>
                     </div>
                     
                     <div class="mb-4 form-floating text-dark">
                         <input type="email" class="form-control bg-light opacity-75 border-0 rounded-3" id="guest_email" name="guest_email" value="{{ current_user.email if current_user.is_authenticated else '' }}" required>
                         <label for="guest_email">Email Address</label>
                     </div>
+
+                    <div id="extraGuestsContainer"></div>
+
+                    {% if room.max_capacity > 1 %}
+                    <div class="mb-4 text-end">
+                        <button type="button" class="btn btn-sm btn-outline-gold rounded-pill" id="addGuestBtn">
+                            <i class="bi bi-person-plus-fill me-1"></i> Add Guest (Max: {{ room.max_capacity }})
+                        </button>
+                    </div>
+                    {% endif %}
                     
                     <div class="row">
                         <div class="col-md-6 mb-4 form-floating text-dark">
@@ -33,13 +50,46 @@
                             <label for="check_out_date" class="ms-2">Check-out Date</label>
                         </div>
                     </div>
+
+                    <h5 class="text-gold mt-2 mb-3 fs-6 fw-bold text-uppercase" style="letter-spacing: 1px;">Enhance Your Stay</h5>
+                    <div class="row g-2 mb-4">
+                        {% for service in services %}
+                        <div class="col-md-6">
+                            <div class="p-3 rounded-3 border border-secondary border-opacity-25" style="background: rgba(255,255,255,0.02);">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="services" value="{{ service.id }}" id="service{{ service.id }}">
+                                    <label class="form-check-label text-light small ms-1" for="service{{ service.id }}">
+                                        {{ service.name }} <span class="text-gold-50 ms-1">+₹{{ "%.2f"|format(service.price) }}</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
                     
+                    <div id="priceSummary" class="p-4 rounded-3 glass-panel border border-gold border-opacity-10 mb-4" style="display: none;">
+                        <h6 class="text-gold text-uppercase small fw-bold mb-3" style="letter-spacing: 1px;">Price Summary</h6>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span class="text-white-50">Room (₹{{ room.price_per_night }} x <span id="summaryDays">0</span> nights)</span>
+                            <span class="text-light">₹<span id="summaryRoomPrice">0.00</span></span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span class="text-white-50">Extra Services</span>
+                            <span class="text-light">₹<span id="summaryServicePrice">0.00</span></span>
+                        </div>
+                        <hr class="border-gold border-opacity-25 my-3">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="fw-bold text-gold">Total Amount</span>
+                            <span class="h5 mb-0 text-gold fw-bold">₹<span id="summaryTotal">0.00</span></span>
+                        </div>
+                    </div>
+
                     <div class="row pt-4 border-top border-gold border-opacity-10 mt-2">
                         <div class="col-6">
                             <p class="text-white-50 mb-0">Your Balance:</p>
-                            <h5 class="text-gold">${{ "%.2f"|format(current_user.wallet_balance) }}</h5>
+                            <h5 class="text-gold">₹{{ "%.2f"|format(current_user.wallet_balance) }}</h5>
                         </div>
-                        <div class="col-6 text-end">
+                        <div class="col-6 text-end" id="balanceWarning">
                             {% if current_user.wallet_balance < room.price_per_night %}
                                 <div class="alert alert-danger py-2 px-3 small border-0 glass-panel">
                                     <i class="bi bi-exclamation-triangle-fill"></i> Insufficient funds for even one night.
@@ -48,12 +98,131 @@
                         </div>
                     </div>
 
-                    <div class="d-grid gap-3 d-sm-flex justify-content-sm-end mt-4">
+                    <div class="d-grid gap-3 d-sm-flex justify-content-sm-end mt-4" id="actionButtons">
                         <a href="{{ url_for('rooms') }}" class="btn btn-outline-light rounded-pill px-5">Cancel</a>
-                        <a href="{{ url_for('topup') }}" class="btn btn-outline-gold rounded-pill px-4">Top-up Wallet</a>
-                        <button type="submit" class="btn btn-gold rounded-pill px-5 fw-bold" id="submitBtn">Confirm Booking</button>
+                        <div id="submitArea">
+                            <button type="submit" class="btn btn-gold rounded-pill px-5 fw-bold" id="confirmBtn">Confirm Booking</button>
+                        </div>
+                        <div id="topupArea" style="display: none;">
+                            <a href="{{ url_for('topup') }}" class="btn btn-outline-gold rounded-pill px-4 fw-bold">
+                                <i class="bi bi-plus-circle me-1"></i> Top-up to Book
+                            </a>
+                        </div>
                     </div>
                 </form>
+
+                <script>
+                    const pricePerNight = {{ room.price_per_night }};
+                    const walletBalance = {{ current_user.wallet_balance }};
+                    const maxCapacity = {{ room.max_capacity }};
+                    
+                    const checkInInput = document.getElementById('check_in_date');
+                    const checkOutInput = document.getElementById('check_out_date');
+                    const serviceChecks = document.querySelectorAll('input[name="services"]');
+                    
+                    const priceSummary = document.getElementById('priceSummary');
+                    const summaryDays = document.getElementById('summaryDays');
+                    const summaryRoomPrice = document.getElementById('summaryRoomPrice');
+                    const summaryServicePrice = document.getElementById('summaryServicePrice');
+                    const summaryTotal = document.getElementById('summaryTotal');
+                    
+                    const confirmBtn = document.getElementById('confirmBtn');
+                    const submitArea = document.getElementById('submitArea');
+                    const topupArea = document.getElementById('topupArea');
+                    const balanceWarning = document.getElementById('balanceWarning');
+
+                    function calculateTotal() {
+                        const checkIn = new Date(checkInInput.value);
+                        const checkOut = new Date(checkOutInput.value);
+                        
+                        if (checkInInput.value && checkOutInput.value && checkOut > checkIn) {
+                            const diffTime = Math.abs(checkOut - checkIn);
+                            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                            
+                            let servicesTotal = 0;
+                            serviceChecks.forEach(check => {
+                                if (check.checked) {
+                                    const label = check.nextElementSibling;
+                                    const priceMatch = label.textContent.match(/₹([\d.]+)/);
+                                    if (priceMatch) servicesTotal += parseFloat(priceMatch[1]);
+                                }
+                            });
+                            
+                            const roomTotal = diffDays * pricePerNight;
+                            const grandTotal = roomTotal + servicesTotal;
+                            
+                            // Update Summary
+                            priceSummary.style.display = 'block';
+                            summaryDays.textContent = diffDays;
+                            summaryRoomPrice.textContent = roomTotal.toFixed(2);
+                            summaryServicePrice.textContent = servicesTotal.toFixed(2);
+                            summaryTotal.textContent = grandTotal.toFixed(2);
+                            
+                            // Wallet Check
+                            if (grandTotal > walletBalance) {
+                                submitArea.style.display = 'none';
+                                topupArea.style.display = 'block';
+                                balanceWarning.innerHTML = `
+                                    <div class="alert alert-danger py-2 px-3 small border-0 glass-panel">
+                                        <i class="bi bi-exclamation-triangle-fill"></i> Insufficient funds for this selection.
+                                    </div>
+                                `;
+                            } else {
+                                submitArea.style.display = 'block';
+                                topupArea.style.display = 'none';
+                                balanceWarning.innerHTML = '';
+                            }
+                        } else {
+                            priceSummary.style.display = 'none';
+                        }
+                    }
+
+                    checkInInput.addEventListener('change', calculateTotal);
+                    checkOutInput.addEventListener('change', calculateTotal);
+                    serviceChecks.forEach(check => check.addEventListener('change', calculateTotal));
+
+                    let currentGuests = 1;
+                    const container = document.getElementById('extraGuestsContainer');
+                    const addBtn = document.getElementById('addGuestBtn');
+
+                    if (addBtn) {
+                        addBtn.addEventListener('click', () => {
+                            if (currentGuests < maxCapacity) {
+                                currentGuests++;
+                                const guestDiv = document.createElement('div');
+                                guestDiv.className = 'guest-entry mb-4 p-4 rounded-3 glass-panel border border-gold border-opacity-10';
+                                guestDiv.innerHTML = `
+                                    <div class="d-flex justify-content-between align-items-center mb-3">
+                                        <h6 class="text-gold mb-0">Guest ${currentGuests}</h6>
+                                        <button type="button" class="btn-close btn-close-white" onclick="removeGuest(this)"></button>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3 form-floating text-dark">
+                                            <input type="text" class="form-control bg-light opacity-75 border-0 rounded-3" name="extra_name" placeholder="Name" required>
+                                            <label class="ms-2">Full Name</label>
+                                        </div>
+                                        <div class="col-md-6 mb-3 form-floating text-dark">
+                                            <input type="text" class="form-control bg-light opacity-75 border-0 rounded-3" name="extra_aadhar" placeholder="Aadhar" pattern="\\d{12}" title="Aadhar must be 12 digits" required>
+                                            <label class="ms-2">12-Digit Aadhar</label>
+                                        </div>
+                                    </div>
+                                    <div class="form-floating text-dark">
+                                        <input type="email" class="form-control bg-light opacity-75 border-0 rounded-3" name="extra_email" placeholder="Email" required>
+                                        <label class="ms-2">Email Address</label>
+                                    </div>
+                                `;
+                                container.appendChild(guestDiv);
+                                if (currentGuests === maxCapacity) addBtn.style.display = 'none';
+                            }
+                        });
+                    }
+
+                    function removeGuest(btn) {
+                        btn.closest('.guest-entry').remove();
+                        currentGuests--;
+                        if (addBtn) addBtn.style.display = 'inline-block';
+                    }
+                </script>
             </div>
         </div>
     </div>

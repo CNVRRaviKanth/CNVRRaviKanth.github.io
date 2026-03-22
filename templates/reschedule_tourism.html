@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row justify-content-center mt-5">
+    <div class="col-md-6">
+        <div class="card glass-panel shadow-lg border-0 rounded-4">
+            <div class="card-header bg-transparent border-bottom border-secondary p-4">
+                <h4 class="mb-0 text-gold font-playfair">Reschedule Tourism Plan</h4>
+            </div>
+            <div class="card-body p-5">
+                <div class="mb-4">
+                    <h5 class="text-light">{{ booking.package.name }}</h5>
+                    <p class="text-white-50 small">Current Date: <span class="text-gold">{{ booking.booking_date.strftime('%d %b %Y') }}</span></p>
+                    <p class="text-white-50 small">Price: <span class="text-gold">₹{{ "%.2f"|format(booking.price) }}</span></p>
+                </div>
+
+                <div class="alert alert-warning py-3 px-4 small border-0 glass-panel mb-4">
+                    <i class="bi bi-info-circle-fill me-2"></i>
+                    A 5% rescheduling penalty (₹{{ "%.2f"|format(booking.price * 0.05) }}) will be deducted from your wallet.
+                </div>
+
+                <form method="POST">
+                    <div class="mb-4 form-floating text-dark">
+                        <input type="date" class="form-control bg-light opacity-75 border-0 rounded-3" id="booking_date" name="booking_date" value="{{ booking.booking_date.strftime('%Y-%m-%d') }}" required>
+                        <label for="booking_date">New Booking Date</label>
+                    </div>
+
+                    <div class="d-grid gap-3 d-sm-flex justify-content-sm-end mt-4">
+                        <a href="{{ url_for('my_bookings') }}" class="btn btn-outline-light rounded-pill px-5">Cancel</a>
+                        <button type="submit" class="btn btn-gold rounded-pill px-5 fw-bold">Confirm Reschedule</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
