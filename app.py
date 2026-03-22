@@ -94,7 +94,7 @@ class Booking(db.Model):
     service_cost = db.Column(db.Float, default=0.0)
 
     room = db.relationship('Room', backref=db.backref('bookings', lazy=True))
-    user = db.relationship('User', backref=db.backref('bookings', lazy=True))
+    user = db.relationship('User', backref=db.backref('bookings', lazy=True, cascade='all, delete-orphan'))
     services = db.relationship('ExtraService', secondary=booking_services, backref=db.backref('bookings', lazy='dynamic'))
 
 class TourismBooking(db.Model):
@@ -106,7 +106,7 @@ class TourismBooking(db.Model):
     status = db.Column(db.String(20), default='confirmed')
 
     package = db.relationship('TourismPackage', backref=db.backref('bookings', lazy=True))
-    user = db.relationship('User', backref=db.backref('tourism_bookings', lazy=True))
+    user = db.relationship('User', backref=db.backref('tourism_bookings', lazy=True, cascade='all, delete-orphan'))
 
 class FoodOrder(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -116,7 +116,7 @@ class FoodOrder(db.Model):
     order_date = db.Column(db.DateTime, default=datetime.utcnow)
 
     food = db.relationship('FoodItem', backref=db.backref('orders', lazy=True))
-    user = db.relationship('User', backref=db.backref('food_orders', lazy=True))
+    user = db.relationship('User', backref=db.backref('food_orders', lazy=True, cascade='all, delete-orphan'))
 
 class BookingGuest(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -125,7 +125,7 @@ class BookingGuest(db.Model):
     email = db.Column(db.String(120), nullable=False)
     aadhar_number = db.Column(db.String(12), nullable=False)
 
-    booking = db.relationship('Booking', backref=db.backref('guests', lazy=True))
+    booking = db.relationship('Booking', backref=db.backref('guests', lazy=True, cascade='all, delete-orphan'))
 
 @app.route('/')
 def index():
@@ -180,6 +180,24 @@ def login():
         else:
             flash('Login Unsuccessful.', 'danger')
     return render_template('login.html')
+
+@app.route('/delete-account', methods=['POST'])
+@login_required
+def delete_account():
+    try:
+        user_id = current_user.id
+        user = User.query.get(user_id)
+        if user:
+            logout_user()
+            db.session.delete(user)
+            db.session.commit()
+            flash('Your account and all associated data have been permanently deleted.', 'success')
+        else:
+            flash('User not found.', 'danger')
+    except Exception as e:
+        db.session.rollback()
+        flash(f'Error deleting account: {str(e)}', 'danger')
+    return redirect(url_for('index'))
 
 @app.route('/logout')
 def logout():

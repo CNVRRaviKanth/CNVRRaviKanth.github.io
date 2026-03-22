@@ -182,6 +182,41 @@
                     <a href="{{ url_for('tourism') }}" class="btn btn-outline-gold rounded-pill px-5 py-3 mt-4 fw-bold">View Packages</a>
                 </div>
                 {% endif %}
+
+                <!-- Delete Account Section -->
+                <div class="mt-5 pt-5 border-top border-secondary border-opacity-25 text-center">
+                    <button type="button" class="btn btn-outline-danger rounded-pill px-5 py-2 fw-semibold" data-bs-toggle="modal" data-bs-target="#deleteAccountModal">
+                        <i class="bi bi-person-x me-2"></i> Delete Account
+                    </button>
+                    <p class="text-white-50 small mt-3">Warning: This action is permanent and will delete all your bookings and history.</p>
+                </div>
+
+                <!-- Delete Account Confirmation Modal -->
+                <div class="modal fade" id="deleteAccountModal" tabindex="-1" aria-labelledby="deleteAccountModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content glass-panel border-0 rounded-4" style="background: rgba(10, 17, 40, 0.95); backdrop-filter: blur(20px);">
+                            <div class="modal-header border-bottom border-secondary border-opacity-10 p-4">
+                                <h5 class="modal-title font-playfair text-gold" id="deleteAccountModalLabel">Confirm Account Deletion</h5>
+                                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body p-4 text-start">
+                                <p class="text-light">Are you absolutely sure you want to delete your account? This will permanently remove:</p>
+                                <ul class="text-white-50 small">
+                                    <li>All room and tourism bookings</li>
+                                    <li>Your food order history</li>
+                                    <li>Any remaining wallet balance</li>
+                                </ul>
+                                <p class="text-danger small fw-bold mt-3"><i class="bi bi-exclamation-triangle-fill me-1"></i> This action cannot be undone.</p>
+                            </div>
+                            <div class="modal-footer border-top border-secondary border-opacity-10 p-4">
+                                <button type="button" class="btn btn-outline-light rounded-pill px-4" data-bs-dismiss="modal">Keep My Account</button>
+                                <form action="{{ url_for('delete_account') }}" method="POST" class="d-inline">
+                                    <button type="submit" class="btn btn-danger rounded-pill px-4 fw-bold">Delete Permanently</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
