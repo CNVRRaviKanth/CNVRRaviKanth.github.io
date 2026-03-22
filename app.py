@@ -580,6 +580,8 @@ if __name__ == '__main__':
             if p4: p4.name, p4.description = 'Market Walk', None
 
         db.session.commit()
-    app.run(debug=True, port=5001)
+    import os
+    port = int(os.environ.get("PORT", 5001))
+    app.run(host='0.0.0.0', port=port)
 
 ## pkill -f "python hotel_management/app.py" || true
