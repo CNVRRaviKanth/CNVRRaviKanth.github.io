@@ -564,10 +564,20 @@ if __name__ == '__main__':
             db.session.add(FoodItem(name='Fresh Lime Soda', category='Drink', price=70.0, description='Refreshing sweet and salty lime soda.'))
 
         if not TourismPackage.query.first():
-            db.session.add(TourismPackage(name='Heritage City Tour', price=2500.0, description='Visit historical monuments and museums with a guide.', duration='6 Hours'))
-            db.session.add(TourismPackage(name='Sacred Temple Visit', price=1500.0, description='Spiritual journey to the most famous city temples.', duration='4 Hours'))
-            db.session.add(TourismPackage(name='Nature Hill Trek', price=3500.0, description='Guided trekking experience with breakfast and kit.', duration='Full Day'))
-            db.session.add(TourismPackage(name='Night Market Walk', price=800.0, description='Explore local street food and shopping hotspots.', duration='3 Hours'))
+            db.session.add(TourismPackage(name='City Tour', price=2500.0, duration='6 Hours'))
+            db.session.add(TourismPackage(name='Temple Visit', price=1500.0, duration='4 Hours'))
+            db.session.add(TourismPackage(name='Hill Trek', price=3500.0, duration='Full Day'))
+            db.session.add(TourismPackage(name='Market Walk', price=800.0, duration='3 Hours'))
+        else:
+            # Update names for existing packages if they match the old ones or just ensure names are correct for IDs 1-4
+            p1 = TourismPackage.query.get(1)
+            if p1: p1.name, p1.description = 'City Tour', None
+            p2 = TourismPackage.query.get(2)
+            if p2: p2.name, p2.description = 'Temple Visit', None
+            p3 = TourismPackage.query.get(3)
+            if p3: p3.name, p3.description = 'Hill Trek', None
+            p4 = TourismPackage.query.get(4)
+            if p4: p4.name, p4.description = 'Market Walk', None
 
         db.session.commit()
     app.run(debug=True, port=5001)
